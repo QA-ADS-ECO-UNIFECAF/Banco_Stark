@@ -6,5 +6,5 @@ Aula Prática QA
 Link1: 
 https://colab.research.google.com/drive/1u6pwi3dYRBS8zHrfppnYTdDqdrdqqZqB?usp=sharing
 
-Link2:
+Link2 (Atividade):
 https://drive.google.com/file/d/1N0l6atajzvE4g3JdQRKnxgN5ol80dCi0/view?usp=sharing
