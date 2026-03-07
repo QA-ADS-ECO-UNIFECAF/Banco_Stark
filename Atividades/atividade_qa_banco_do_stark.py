@@ -122,12 +122,12 @@ print('Banco do Stark carregado!')
 # =========================================
 
 print('=== CRIAR CONTAS ===')
-banco.criar_conta(123)
+banco.criar_conta('tony')
 banco.criar_conta('pepper')
 banco.criar_conta('banner')
 
 print('\n=== DEPÓSITOS ===')
-banco.depositar('tony', -100)
+banco.depositar('tony', 1000)
 banco.depositar('pepper', 500)
 
 print('\n=== SALDOS ===')
@@ -139,7 +139,7 @@ banco.sacar('tony', 200)
 banco.saldo_atual('tony')
 
 print('\n=== TRANSFERÊNCIA ===')
-banco.transferir('tony', 'ronaldo', 100)
+banco.transferir('tony', 'pepper', 100)
 banco.saldo_atual('tony')
 banco.saldo_atual('pepper')
 
@@ -154,7 +154,7 @@ print('Teste N1 - Depósito com valor zero')
 banco.depositar('tony', 0)
 
 print('\nTeste N2 - Depósito negativo')
-banco.depositar('tony', -100)
+banco.depositar('tony', -5)
 
 print('\nSaldo após depósitos inválidos')
 banco.saldo_atual('tony')
@@ -163,13 +163,13 @@ print('\nTeste N3 - Saque acima do saldo')
 banco.sacar('tony', 100000)
 
 print('\nTeste N4 - Transferência para conta inexistente')
-banco.transferir('tony', 'thor', 50)
+banco.transferir('igor', 'thor', 50)
 
 print('\nTeste N5 - Consulta de conta inexistente (saldo)')
-banco.saldo_atual('Tony')
+banco.saldo_atual('tony')
 
 print('\nTeste N6 - Consulta de conta inexistente (extrato)')
-banco.mostrar_extrato('natasha')
+banco.mostrar_extrato('igor')
 
 """# Casos de Teste (atividade)
 Agora você vai documentar **3 Casos de Teste** com base no que você observou.
@@ -187,87 +187,71 @@ Agora você vai documentar **3 Casos de Teste** com base no que você observou.
 - Consulta de saldo de conta inexistente
 
 ## Template — Caso de Teste 1
-ID: CT-001  
-Título/Objetivo: Verificar se é possível criar contas utilizando apenas números no campo nome.
+**ID:** CT-001  
+**Título/Objetivo:**  Validar transferência quando a conta de origem não existe
 
-Pré-condição:
-- Sistema iniciado e banco de dados ativo.
-
-Passos:
-1. Ativar o banco de dados.
-2. Remover as aspas do campo nome.
-3. Digitar o valor 123 no campo nome.
-4. Tentar criar a conta.
-
-Resultado esperado:
-O sistema deve retornar um erro informando que o nome da conta deve conter caracteres válidos (não apenas números).
-
-Resultado obtido:
-ERRO - Conta já existe: 123
-
-Status (Pass/Fail): Pass
-
-Evidência:
-=== CRIAR CONTAS ===  
-ERRO - Conta já existe: 123
-
-## Template — Caso de Teste 2
-ID: CT-002  
-Título/Objetivo: Validar se é possível realizar um depósito com valor negativo.
-
-Pré-condição:
-- Sistema iniciado e banco de dados ativo.
-- Conta previamente cadastrada.
-
-Passos:
-1. Iniciar o banco.
-2. Selecionar a opção de depósito.
-3. Digitar um valor negativo.
-4. Executar a operação.
-
-Resultado esperado:
-O sistema deve impedir a operação e exibir uma mensagem de erro informando que não é permitido realizar depósitos com valores negativos.
-
-Resultado obtido:
-=== DEPÓSITOS ===  
-OK - Depósito realizado: -100
-
-Status (Pass/Fail): Fail
-
-Evidência:
-=== DEPÓSITOS ===  
-OK - Depósito realizado: -100
-
-## Template — Caso de Teste 3
-
-**ID:** CT-003  
-**Título/Objetivo:** Verificar se é possível realizar uma transferência para uma conta que não existe.
-
-**Pré-condição:**  
-- Banco iniciado.  
-- Usuário autenticado em uma conta válida.  
-- Opção de transferência disponível.
+**Pré-condição:** Sistema Banco do Stark em execução e conta igor não cadastrada no sistema.
 
 **Passos:**  
-1. Iniciar o banco.  
-2. Realizar login em uma conta pré-existente.  
-3. Informar uma conta de destino que não existe.  
-4. Tentar realizar a transferência.
+1.  Executar o sistema Banco do Stark
+2.  Tentar realizar transferência da conta igor para thor no valor de 50
+3.  Observar a resposta retornada pelo sistema
 
-**Resultado esperado:**  
-O sistema deve impedir a operação e exibir uma mensagem informando que a conta de destino não foi encontrada.
+**Resultado esperado:**  O sistema deve impedir a operação e informar que a conta de origem não existe.
 
-**Resultado obtido:**  
+**Resultado obtido:**  ERRO - Conta origem não encontrada
 
-=== TRANSFERÊNCIA ===
-ERRO - Conta destino não encontrada
-
-**Status (Pass/Fail):** Fail  
+**Status (Pass/Fail):**  Pass
 
 **Evidência:**  
+Teste N4 - Transferência para conta inexistente
+ERRO - Conta origem não encontrada
 
-=== TRANSFERÊNCIA ===
-ERRO - Conta destino não encontrada
+## Template — Caso de Teste 2
+**ID:** CT-002  
+**Título/Objetivo:**  Depósito com valor zero
+
+**Pré-condição:**  Realizar depósito na conta tony
+
+**Passos:**  Informar o valor 0
+
+1.  Executar o sistema Banco do Stark
+
+2.  Realizar depósito na conta tony
+
+3.  Informar o valor 0
+
+**Resultado esperado:**  O sistema deve impedir o depósito e informar que o valor deve ser maior que zero.
+
+**Resultado obtido:**  OK - Depósito realizado: 0
+
+**Status (Pass/Fail):**  Fail
+
+**Evidência:**  Teste N1 - Depósito com valor zero
+OK - Depósito realizado: 0
+
+## Template — Caso de Teste 3
+**ID:** CT-003
+**Título/Objetivo:**  Validar depósito com valor negativo
+
+**Pré-condição:**  Pré-condição: Sistema Banco do Stark em execução e conta tony cadastrada no sistema.
+
+**Passos:**  
+
+1.  Executar o sistema Banco do Stark
+
+2.  Realizar depósito na conta tony
+
+3.  Informar o valor -2
+
+**Resultado esperado:**  O sistema deve impedir depósitos com valores negativos e apresentar mensagem de erro.
+
+**Resultado obtido:**  OK - Depósito realizado: -2
+
+**Status (Pass/Fail):**  Fail
+
+**Evidência:**  Teste N2 - Depósito negativo
+OK - Depósito realizado: -2
 
 # Bug Report (atividade)
 Agora escolha **3 falhas** que você observou e registre o **Bug Report profissional** de cada uma delas.
@@ -282,118 +266,88 @@ Agora escolha **3 falhas** que você observou e registre o **Bug Report profissi
 - Sistema aceita depósito com valor negativo
 
 ## Template — Bug Report
-**Título:** Sistema aceita depósito com valor zero
+**Título:**  Sistema aceita depósito com valor 0
 
-**Severidade:** Média  
-**Prioridade:** Alta  
+**Severidade (Baixa/Média/Alta):**  Baixa
+
+**Prioridade (Baixa/Média/Alta):**  Baixa
+
 **Ambiente:** Google Colab / Python 3.x / Banco do Stark  
 
-**Descrição:**  
-O sistema permite realizar depósitos com valor **0**, porém o valor deveria ser **maior que zero**.
+**Descrição:**  O sistema permite realizar depósitos com valor igual a zero. De acordo com as regras do sistema bancário, o valor do depósito deve ser maior que zero.
 
 **Passos para reproduzir:**  
-1. Criar uma conta: banco.criar_conta('tony')  
-2. Realizar depósito com valor zero: banco.depositar('tony', 0)  
-3. Verificar o saldo: banco.saldo_atual('tony')  
-4. Verificar o extrato: banco.mostrar_extrato('tony')
 
-**Resultado esperado:**  
-O sistema deve impedir o depósito e exibir mensagem de erro informando que o valor deve ser maior que zero.
+1.  Executar o sistema Banco do Stark
 
-**Resultado obtido:**  
+2.  Realizar depósito na conta tony
 
+3.  Informar o valor 0
+
+**Resultado esperado:**  O sistema deve bloquear a operação e informar que o valor do depósito deve ser maior que zero.
+
+**Resultado obtido:**  OK - Depósito realizado: 0
+
+**Evidência:**  Teste N1 - Depósito com valor zero
 OK - Depósito realizado: 0
 
-
-**Impacto/Risco:**  
-Operações inválidas podem ser registradas no extrato.
-
-**Evidência:**  
-
-Teste N1 - Depósito com valor zero
-OK - Depósito realizado: 0
+**Impacto/Risco:**  Permite registro de operações inválidas no sistema e pode gerar inconsistências nas movimentações financeiras.
 
 ## Template — Bug Report
-**Título:** Extrato registra depósitos com valores inválidos
+**Título:**  Sistema permite transferência com valor negativo
 
-**Severidade:** Média  
-**Prioridade:** Alta  
-**Ambiente:** Google Colab / Python 3.x / Banco do Stark
+**Severidade (Baixa/Média/Alta):**  Alta
 
-**Descrição:**  
-O sistema registra no extrato depósitos com valores **zero e negativos**, que deveriam ser rejeitados. O extrato deveria conter apenas operações válidas.
+**Prioridade (Baixa/Média/Alta):**  Alta
+
+**Ambiente:** Google Colab / Python 3.x / Banco do Stark  
+
+**Descrição:**  Durante os testes do sistema bancário, foi identificado que o sistema permite realizar transferências utilizando valores negativos.
 
 **Passos para reproduzir:**  
-1. Criar uma conta: `banco.criar_conta('tony')  
-2. Realizar depósitos:  
-   -banco.depositar('tony', 1000)  
-   -banco.depositar('tony', 0)  
-   -banco.depositar('tony', -100)  
-3. Verificar o extrato: `banco.mostrar_extrato('tony')
 
-**Resultado esperado:**  
-O extrato deve registrar apenas operações válidas.
+1.  Criar duas contas no sistema.
 
-**Resultado obtido:**  
+2.  Executar o comando de transferência com valor negativo.
 
-('deposito', 1000)
-('deposito', 0)
-('deposito', -100)
+3.  Verificar o saldo das contas após a operação.
 
+**Resultado esperado:**  O sistema deveria bloquear a operação e apresentar uma mensagem de erro informando que valores negativos não são permitidos.
 
-**Impacto/Risco:**  
-O extrato pode registrar operações inválidas, prejudicando auditorias e relatórios.
+**Resultado obtido:**  OK - Depósito realizado: -5
 
-**Evidência:**  
+**Evidência:**  Teste N2 - Depósito negativo
+OK - Depósito realizado: -5
 
-=== EXTRATO (tony) ===
-EXTRATO: tony
- - ('deposito', 1000)
- - ('saque', 200)
- - ('transferencia_saida', 100)
- - ('deposito', 0)
- - ('deposito', -100)
+**Impacto/Risco:**  Esse erro pode gerar inconsistências financeiras no sistema, permitindo manipulação indevida de saldo e comprometendo a confiabilidade do banco.
 
 ## Template — Bug Report
-**Título:** Sistema permite transferência para a mesma conta
+**Título:**  Consulta de saldo retorna conta existente durante teste de conta inexistente
 
-**Severidade:** Média  
-**Prioridade:** Alta  
-**Ambiente:** Google Colab / Python 3.x / Banco do Stark
+**Severidade (Baixa/Média/Alta):**  Média
 
-**Descrição:**  
-O sistema não valida se a conta de origem é igual à conta de destino. Isso permite que um usuário realize uma transferência para si mesmo, o que é uma operação inválida segundo as regras do sistema.
+**Prioridade (Baixa/Média/Alta):**  Média
+
+**Ambiente:** Google Colab / Python 3.x / Banco do Stark  
+
+**Descrição:**  Durante a execução do teste de consulta de saldo para conta inexistente, o sistema retornou o saldo da conta tony, mesmo o teste indicando que deveria tratar uma conta inexistente.
 
 **Passos para reproduzir:**  
-1. Criar uma conta: banco.criar_conta('tony')`  
-2. Realizar um depósito: banco.depositar('tony', 1000)`  
-3. Verificar saldo inicial: banco.saldo_atual('tony')`  
-4. Tentar transferir para si mesmo: banco.transferir('tony', 'tony', 100)`  
-5. Verificar saldo final: banco.saldo_atual('tony')`  
-6. Verificar extrato: banco.mostrar_extrato('tony')`
 
-**Resultado esperado:**  
-O sistema deve impedir a operação e exibir erro informando que não é permitido transferir para a mesma conta.
+1.  Executar o sistema Banco do Stark.
 
-**Resultado obtido:**  
+2.  Executar o teste de consulta de saldo de conta inexistente.
 
-OK - Transferência realizada: 100
+3.  Rodar o comando
 
+**Resultado esperado:** O sistema deveria retornar uma mensagem de erro informando que a conta não existe.  
 
-**Impacto/Risco:**  
-Operações sem sentido podem ser registradas no extrato, poluindo o histórico de transações.
+**Resultado obtido:**  SALDO tony = 14279.0
 
-**Evidência:**  
+**Evidência:**  Teste N5 - Consulta de conta inexistente (saldo)
+SALDO tony = 14279.0
 
-banco.transferir('tony', 'tony', 100)
-OK - Transferência realizada: 100
-
-SALDO tony = 1000
-
-EXTRATO: tony
- - ('deposito', 1000)
- - ('transferencia_saida', 100)
- - ('transferencia_entrada', 100)
+**Impacto/Risco:**  A falha na validação da conta pode permitir consultas incorretas de saldo e gerar inconsistência no controle das contas do sistema.
 
 ## (Opcional) Rodar novos testes
 Use esta célula para rodar testes adicionais e fortalecer suas evidências.
