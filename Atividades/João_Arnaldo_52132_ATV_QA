@@ -118,217 +118,58 @@ print('Banco do Stark carregado!')
 """
 
 # =========================================
-# SISTEMA BANCÁRIO
+# CENÁRIO INICIAL (caminho feliz)
 # =========================================
 
-class Banco:
+print('=== CRIAR CONTAS ===')
+banco.criar_conta('tony')
+banco.criar_conta('pepper')
+banco.criar_conta('banner')
 
-    def __init__(self):
-        self.contas = {}
+print('\n=== DEPÓSITOS ===')
+banco.depositar('tony', 1000)
+banco.depositar('pepper', 500)
 
-    # -----------------------------
-    # Criar conta
-    # -----------------------------
-    def criar_conta(self, titular):
+print('\n=== SALDOS ===')
+banco.saldo_atual('tony')
+banco.saldo_atual('pepper')
 
-        if titular is None or titular.strip() == "":
-            print("Erro: titular inválido.")
-            return
+print('\n=== SAQUE ===')
+banco.sacar('tony', 200)
+banco.saldo_atual('tony')
 
-        if titular in self.contas:
-            print("Erro: conta já existe.")
-            return
+print('\n=== TRANSFERÊNCIA ===')
+banco.transferir('tony', 'pepper', 100)
+banco.saldo_atual('tony')
+banco.saldo_atual('pepper')
 
-        self.contas[titular] = {
-            "saldo": 0,
-            "extrato": []
-        }
+print('\n=== EXTRATO (tony) ===')
+banco.mostrar_extrato('tony')
 
-        print(f"Conta criada para {titular}")
+print('\n=================================')
+print('TESTES NEGATIVOS (QA)')
+print('=================================\n')
 
+print('Teste N1 - Depósito com valor zero')
+banco.depositar('tony', 0)
 
-    # -----------------------------
-    # Depositar
-    # -----------------------------
-    def depositar(self, titular, valor):
+print('\nTeste N2 - Depósito negativo')
+banco.depositar('tony', -100)
 
-        if titular not in self.contas:
-            print("Erro: conta inexistente.")
-            return
+print('\nSaldo após depósitos inválidos')
+banco.saldo_atual('tony')
 
-        if valor <= 0:
-            print("Erro: valor de depósito inválido.")
-            return
+print('\nTeste N3 - Saque acima do saldo')
+banco.sacar('tony', 100000)
 
-        self.contas[titular]["saldo"] += valor
-        self.contas[titular]["extrato"].append(f"Depósito: +{valor}")
+print('\nTeste N4 - Transferência para conta inexistente')
+banco.transferir('tony', 'thor', 50)
 
-        print(f"Depósito de {valor} realizado em {titular}")
+print('\nTeste N5 - Consulta de conta inexistente (saldo)')
+banco.saldo_atual('Tony')
 
-
-    # -----------------------------
-    # Sacar
-    # -----------------------------
-    def sacar(self, titular, valor):
-
-        if titular not in self.contas:
-            print("Erro: conta inexistente.")
-            return
-
-        if valor <= 0:
-            print("Erro: valor de saque inválido.")
-            return
-
-        if valor > self.contas[titular]["saldo"]:
-            print("Erro: saldo insuficiente.")
-            return
-
-        self.contas[titular]["saldo"] -= valor
-        self.contas[titular]["extrato"].append(f"Saque: -{valor}")
-
-        print(f"Saque de {valor} realizado em {titular}")
-
-
-    # -----------------------------
-    # Transferir
-    # -----------------------------
-    def transferir(self, origem, destino, valor):
-
-        if origem not in self.contas:
-            print("Erro: conta de origem inexistente.")
-            return
-
-        if destino not in self.contas:
-            print("Erro: conta de destino inexistente.")
-            return
-
-        if origem == destino:
-            print("Erro: não é possível transferir para a mesma conta.")
-            return
-
-        if valor <= 0:
-            print("Erro: valor de transferência inválido.")
-            return
-
-        if valor > self.contas[origem]["saldo"]:
-            print("Erro: saldo insuficiente para transferência.")
-            return
-
-        self.contas[origem]["saldo"] -= valor
-        self.contas[destino]["saldo"] += valor
-
-        self.contas[origem]["extrato"].append(
-            f"Transferência enviada: -{valor} para {destino}"
-        )
-
-        self.contas[destino]["extrato"].append(
-            f"Transferência recebida: +{valor} de {origem}"
-        )
-
-        print(f"Transferência de {valor} de {origem} para {destino} realizada")
-
-
-    # -----------------------------
-    # Mostrar saldo
-    # -----------------------------
-    def saldo_atual(self, titular):
-
-        if titular not in self.contas:
-            print("Erro: conta inexistente.")
-            return
-
-        saldo = self.contas[titular]["saldo"]
-        print(f"Saldo de {titular}: {saldo}")
-
-
-    # -----------------------------
-    # Mostrar extrato
-    # -----------------------------
-    def mostrar_extrato(self, titular):
-
-        if titular not in self.contas:
-            print("Erro: conta inexistente.")
-            return
-
-        print(f"\nExtrato da conta {titular}")
-
-        for operacao in self.contas[titular]["extrato"]:
-            print(operacao)
-
-        print(f"Saldo atual: {self.contas[titular]['saldo']}")
-
-
-# =========================================
-# CRIAR BANCO
-# =========================================
-
-banco = Banco()
-
-
-# =========================================
-# CENÁRIO NORMAL
-# =========================================
-
-print("=== CRIAR CONTAS ===")
-banco.criar_conta("França")
-banco.criar_conta("EUA")
-banco.criar_conta("Irã")
-banco.criar_conta("Brasil")
-banco.criar_conta('')
-
-print("\n=== DEPÓSITOS ===")
-banco.depositar("França", 50000)
-banco.depositar("EUA", 1000)
-banco.depositar("Irã", 50000)
-banco.depositar("Brasil", 0)
-
-print("\n=== SALDOS ===")
-banco.saldo_atual("França")
-banco.saldo_atual("EUA")
-banco.saldo_atual("Irã")
-banco.saldo_atual("Brasil")
-
-print("\n=== SAQUE ===")
-banco.sacar("França", 200)
-banco.saldo_atual("França")
-
-print("\n=== TRANSFERÊNCIA ===")
-banco.transferir("EUA", "Irã", 500)
-banco.saldo_atual("EUA")
-banco.saldo_atual("Irã")
-
-print("\n=== EXTRATO (Irã) ===")
-banco.mostrar_extrato("Irã")
-
-
-# =========================================
-# TESTES NEGATIVOS (QA)
-# =========================================
-
-print("\n=================================")
-print("TESTES NEGATIVOS (QA)")
-print("=================================\n")
-
-print("Teste N1 - Depósito com valor zero")
-banco.depositar("França", 0)
-
-print("\nTeste N2 - Depósito negativo")
-banco.depositar("EUA", -100)
-
-print("\nTeste N3 - Saque acima do saldo")
-banco.sacar("EUA", 100000)
-
-print("\nTeste N4 - Transferência para conta inexistente")
-banco.transferir("EUA", "Alemanha", 50)
-
-print("\nTeste N5 - Transferência para si mesmo")
-banco.transferir("EUA", "EUA", 50)
-
-print("\nTeste N6 - Consulta de conta inexistente")
-banco.saldo_atual("Alemanha")
-
-print("\nTeste N7 - Extrato de conta inexistente")
-banco.mostrar_extrato("Alemanha")
+print('\nTeste N6 - Consulta de conta inexistente (extrato)')
+banco.mostrar_extrato('natasha')
 
 """# Casos de Teste (atividade)
 Agora você vai documentar **3 Casos de Teste** com base no que você observou.
@@ -346,32 +187,83 @@ Agora você vai documentar **3 Casos de Teste** com base no que você observou.
 - Consulta de saldo de conta inexistente
 
 ## Template — Caso de Teste 1
-**ID:** CT-002
-**Título/Objetivo:** CRIAR BANCO
+**ID:** CT-001  
+**Título/Objetivo:**  Depositar valor conta
+**Pré-condição:** Conta destinada ter que existir
 
-**Pré-condição:** Banco rodar
+**Passos:**  
+1. banco.criar_conta('NomeDaConta')
+2. banco.depositar('NomeDaConta', valor)
 
-**Passos:**
-1.  CRIAR CONTA
-2.  DEPOSITAR
-3.  SALDO
-**Resultado esperado:**  CONTA CRIADA
-
-**Resultado obtido:** === CRIAR CONTAS ===
-Conta criada para França
-
-**Status (Pass/Fail):** PASS
-
+**Resultado esperado:** OK - Depósito realizado: valor
+**Resultado obtido:**  OK - Depósito realizado: 1000
+**Status (Pass/Fail):** Pass
 **Evidência:**
-=== CRIAR CONTAS ===
+=== DEPÓSITOS ===
+OK - Depósito realizado: 1000
+OK - Depósito realizado: 500
 
-Conta criada para França
+## Template — Caso de Teste 2
+**ID:** CT-002  
+**Título/Objetivo:** Sacar valor de conta
 
-Conta criada para EUA
+**Pré-condição:**  Conta existir e ter o valor em conta
 
-Conta criada para Irã
+**Passos:**  
+1. banco.criar_conta('NomeDaConta')
+2. banco.depositar('NomeDaConta', valor)
+3. banco.sacar('NomeDaConta', valor)
+4. banco.saldo_atual('Nome da Conta')
 
-Conta criada para Brasil
+**Resultado esperado:**
+
+OK - Saque realizado: valor
+
+SALDO NomeDaConta: novoValor
+
+**Resultado obtido:**  
+
+**Status (Pass/Fail):**  Pass
+
+**Evidência:**  
+=== SAQUE ===
+
+OK - Saque realizado: 200
+
+SALDO tony = 3200.0
+
+## Template — Caso de Teste 3
+**ID:** CT-003  
+**Título/Objetivo:**  Transferir valor entre contas
+
+**Pré-condição:**  Ter duas contas criadas e a de destino possuir saldo
+
+**Passos:**  
+1.  banco.criar_conta('NomeDaConta')
+2.  banco.depositar('NomeDaConta', valor)
+3.  banco.transferir('ContaOrigem', 'ContaDestino', valor)
+
+**Resultado esperado:** OK - Transferência realizada: valor  
+
+**Resultado obtido:**  
+=== TRANSFERÊNCIA ===
+
+OK - Transferência realizada: 100
+
+SALDO tony = 3100.0
+
+SALDO pepper = 3000.0
+
+**Status (Pass/Fail):**  Pass
+
+**Evidência:**  
+=== TRANSFERÊNCIA ===
+
+OK - Transferência realizada: 100
+
+SALDO tony = 3100.0
+
+SALDO pepper = 3000.0
 
 # Bug Report (atividade)
 Agora escolha **3 falhas** que você observou e registre o **Bug Report profissional** de cada uma delas.
@@ -386,37 +278,105 @@ Agora escolha **3 falhas** que você observou e registre o **Bug Report profissi
 - Sistema aceita depósito com valor negativo
 
 ## Template — Bug Report
-**Título:**   Depósito negativo
+**Título:**  Deposito = 0
 
-**Severidade (Baixa/Média/Alta):**  Alto
+**Severidade (Baixa/Média/Alta):**  baixa
 
-**Prioridade (Baixa/Média/Alta):**  Alto
+**Prioridade (Baixa/Média/Alta):**  baixa
 
-**Ambiente:** Google Colab / Python 3.x / Banco do Stark
+**Ambiente:** Google Colab / Python 3.x / Banco do Stark  
 
-**Descrição:**
-Houve uma tentativa de deposito com valor negativo
+**Descrição:**  
+O sistema permite a realização de depósitos com valor igual a zero
 
-print("\nTeste N2 - Depósito negativo")
-banco.depositar("EUA", -100)
+**Passos para reproduzir:**  
+1.  Criar conta - banco.criar_conta('NomeDaConta')
+2.  Inserir valor zero como deposito - banco.depositar('NomeDaConta', valor)
+
+**Resultado esperado:**
+- Mensagem de erro: "ERRO - insira um valor de deposito maior que 0.0"
+
+**Resultado obtido:**
+- OK - Depósito realizado: 0
+
+**Evidência:**  
+- OK - Depósito realizado: 0
+
+**Impacto/Risco:**
+Baixo
+
+## Template — Bug Report
+**Título:**  Sistema aceita depósito com valor negativo
+
+**Severidade (Baixa/Média/Alta):**  Alta
+
+**Prioridade (Baixa/Média/Alta):**  Alta
+
+**Ambiente:** Google Colab / Python 3.x / Banco do Stark  
+
+**Descrição:**  
+
+**Passos para reproduzir:**  
+
+1. Criar uma conta - banco.criar_conta('tony')
+
+2. Verificar saldo inicial (ex: 1000)
+
+3. Realizar um depósito com valor negativo - banco.depositar('tony', -100)
+
+4. Verificar saldo após operação
 
 
-**Passos para reproduzir:**
-1.  Criar Conta
 
-2. Depositar
+**Resultado esperado:**  
+- Mensagem de erro: "ERRO - Valor de depósito deve ser maior que zero"
 
-3. Salto
+**Resultado obtido:**  
+- OK - Depósito realizado: -100
 
-**Resultado esperado:**  Que não fosse realizado/ Cocluído a operação.
+- Saldo é reduzido em 100 (de 1000 para 900)
 
-**Resultado obtido:**  Depósito negativo / Operação não realizada.
+**Evidência:**  
+
+Teste N2 - Depósito negativo
+OK - Depósito realizado: -100
+
+Saldo após depósitos inválidos
+SALDO tony = 900.0
+
+**Impacto/Risco:**  
+
+Alto
+
+## Template — Bug Report
+**Título:**  Case sensitivity na consulta de contas causa inconsistência
+**Severidade (Baixa/Média/Alta):**  Média
+**Prioridade (Baixa/Média/Alta):**  Média
+**Ambiente:** Google Colab / Python 3.x / Banco do Stark  
+
+**Descrição:**  
+O sistema diferencia maiúsculas de minúsculas ao buscar contas, causando confusão no usuário
+
+**Passos para reproduzir:**  
+1.  Criar uma conta - banco.criar_conta('tony')
+2. Consultar saldo usando variação com maiúscula - banco.saldo_atual('Tony')  
+
+**Resultado esperado:**  
+
+Sistema encontrar a conta independente do case sensitive.
+
+**Resultado obtido:**
+ERRO - Conta não encontrada: Tony
+
+Mesmo que a conta 'tony' exista no sistema
 
 **Evidência:**
-Teste N2 - Depósito negativo
-Erro: valor de depósito inválido.
 
-**Impacto/Risco:** Alto, risco de Fraudes Futuros.
+Teste N5 - Consulta de conta inexistente (saldo)
+ERRO - Conta não encontrada: Tony
+
+**Impacto/Risco:**
+Médio
 
 ## (Opcional) Rodar novos testes
 Use esta célula para rodar testes adicionais e fortalecer suas evidências.
