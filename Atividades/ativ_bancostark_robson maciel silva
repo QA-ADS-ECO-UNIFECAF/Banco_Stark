@@ -1,0 +1,125 @@
+# main.py
+class Conta:
+    def __init__(self, titular: str):
+        self.titular = titular
+        self.saldo = 0.0
+        self.extrato = []
+
+
+class BancoDoStark:
+    def __init__(self):
+        self.contas = {}
+
+    def criar_conta(self, titular: str):
+        if not titular.strip():
+            print("Nome inválido")
+            return
+
+        if titular in self.contas:
+            print("Conta já existe:", titular)
+            return
+
+        self.contas[titular] = Conta(titular)
+        print("Conta criada para:", titular)
+
+    def depositar(self, titular: str, valor: float):
+        if titular not in self.contas:
+            print("Conta não encontrada:", titular)
+            return
+
+        if valor <= 0:
+            print("Valor inválido")
+            return
+
+        self.contas[titular].saldo += valor
+        self.contas[titular].extrato.append(("deposito", valor))
+        print("Depósito realizado para", titular, valor)
+
+    def sacar(self, titular: str, valor: float):
+        if titular not in self.contas:
+            print("Conta não encontrada")
+            return
+
+        if valor <= 0:
+            print("Valor inválido")
+            return
+
+        if self.contas[titular].saldo < valor:
+            print("Saldo insuficiente")
+            return
+
+        self.contas[titular].saldo -= valor
+        self.contas[titular].extrato.append(("saque", valor))
+        print("Saque realizado:", valor)
+
+    def transferir(self, origem: str, destino: str, valor: float):
+        if origem not in self.contas or destino not in self.contas:
+            print("Conta inválida")
+            return
+
+        if valor <= 0:
+            print("Valor inválido")
+            return
+
+        if self.contas[origem].saldo < valor:
+            print("Saldo insuficiente")
+            return
+
+        self.contas[origem].saldo -= valor
+        self.contas[destino].saldo += valor
+
+        self.contas[origem].extrato.append(("saida", valor))
+        self.contas[destino].extrato.append(("entrada", valor))
+
+        print("Transferência concluída:", valor)
+
+
+if __name__ == "__main__":
+    banco = BancoDoStark()
+
+    banco.criar_conta("Tony")
+    banco.criar_conta("Pepper")
+
+    banco.depositar("Tony", 1000)
+    banco.sacar("Tony", 200)
+
+    banco.transferir("Tony", "Pepper", 300)
+
+    print("Saldo Tony:", banco.contas["Tony"].saldo)
+    print("Saldo Pepper:", banco.contas["Pepper"].saldo)
+
+
+# README.md
+"""
+Banco do Stark
+
+Projeto simples em Python que simula um sistema bancário com operações básicas.
+
+Funcionalidades
+
+Criar conta
+Depositar valores
+Sacar dinheiro
+Transferir entre contas
+
+Como executar
+
+python main.py
+
+Autor
+
+Robson Maciel Silva
+"""
+
+
+# requirements.txt
+"""
+"""
+
+
+# .gitignore
+"""
+__pycache__/
+*.pyc
+.env
+"""
