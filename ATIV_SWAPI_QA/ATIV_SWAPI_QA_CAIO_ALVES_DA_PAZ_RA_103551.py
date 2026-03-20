@@ -1,6 +1,7 @@
 import requests
 import json
 
+
 # Atividade Prática — QA com APIs (SWAPI)
 # Integrante: Caio Alves da Paz | RA: 103551
 # -------------------------
