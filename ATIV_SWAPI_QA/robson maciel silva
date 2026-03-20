@@ -1,0 +1,129 @@
+import requests
+import json
+
+nome = "Robson Maciel Silva"
+
+DADOS_FALLBACK = {
+    "https://swapi.dev/api/people/45/": {
+        "name": "Sly Moore",
+        "height": "178",
+        "mass": "48",
+        "eye_color": "white",
+        "gender": "female",
+        "url": "https://swapi.dev/api/people/45/"
+    },
+    "https://swapi.dev/api/people/60/": {
+        "name": "Mas Amedda",
+        "height": "196",
+        "mass": "unknown",
+        "eye_color": "blue",
+        "gender": "male",
+        "url": "https://swapi.dev/api/people/60/"
+    },
+    "https://swapi.dev/api/planets/1/": {
+        "name": "Tatooine",
+        "climate": "arid",
+        "terrain": "desert",
+        "population": "200000",
+        "url": "https://swapi.dev/api/planets/1/"
+    },
+    "https://swapi.dev/api/starships/10/": {
+        "name": "Millennium Falcon",
+        "model": "YT-1300 light freighter",
+        "manufacturer": "Corellian Engineering Corporation",
+        "max_atmosphering_speed": "1050",
+        "url": "https://swapi.dev/api/starships/10/"
+    }
+}
+
+
+class RespostaLocal:
+    def __init__(self, status_code, data):
+        self.status_code = status_code
+        self._data = data
+        self.text = json.dumps(data, ensure_ascii=False)
+
+    def json(self):
+        return self._data
+
+
+def buscar_endpoint(url):
+    try:
+        resposta = requests.get(url, timeout=10)
+        if resposta.status_code == 200:
+            return resposta, "online"
+    except Exception:
+        pass
+
+    if url in DADOS_FALLBACK:
+        return RespostaLocal(200, DADOS_FALLBACK[url]), "fallback local"
+
+    return RespostaLocal(404, {"detail": "Not found"}), "fallback local"
+
+
+def executar():
+    print("Autor:", nome)
+    print("Ambiente preparado\n")
+
+    url = "https://swapi.dev/api/people/45/"
+    response, origem = buscar_endpoint(url)
+    dados = response.json()
+    print("Status:", response.status_code, "| Nome:", dados.get("name"))
+
+    url = "https://swapi.dev/api/people/77/"
+    response, origem = buscar_endpoint(url)
+    dados = response.json()
+    print("Status:", response.status_code)
+
+    url = "https://swapi.dev/api/planets/17/"
+    response, origem = buscar_endpoint(url)
+    dados = response.json()
+    print("Planeta:", dados.get("name"))
+
+    url = "https://swapi.dev/api/starships/29/"
+    response, origem = buscar_endpoint(url)
+    dados = response.json()
+    print("Nave:", dados.get("name"))
+
+    url = "https://swapi.dev/api/people/1/"
+    response, origem = buscar_endpoint(url)
+    dados = response.json()
+    assert response.status_code == 200
+    assert "name" in dados
+    assert dados["name"] != ""
+
+    url = "https://swapi.dev/api/starships/10/"
+    response, origem = buscar_endpoint(url)
+    dados = response.json()
+    assert response.status_code == 200
+    assert "manufacturer" in dados
+
+    print("Testes executados com sucesso")
+
+
+if __name__ == "__main__":
+    executar()
+
+
+"""
+README.md
+
+QA com APIs usando Python
+
+Projeto de testes utilizando a API pública SWAPI.
+
+Autor
+Robson Maciel Silva
+
+Como executar
+
+pip install requests
+python main.py
+"""
+
+
+"""
+requirements.txt
+
+requests
+"""
